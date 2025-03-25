@@ -131,6 +131,7 @@ class ChatCompletions:
                 raise ValueError(f"Invalid role: {message.get('role')}")
         return system_prompt, bedrock_messages
 
+
     def _convert_bedrock_response_to_openai_format(self, bedrock_response):
         # Convert Bedrock response format to OpenAI format
         content = ""
