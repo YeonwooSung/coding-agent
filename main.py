@@ -1,6 +1,23 @@
-def main():
-    print("Hello from coding-agent!")
+import asyncio
+
+from app.agent.umile import Umile
+from app.logger import logger
+
+
+async def main():
+    agent = Umile()
+    try:
+        prompt = input("Enter your prompt: ")
+        if not prompt.strip():
+            logger.warning("Empty prompt provided.")
+            return
+
+        logger.warning("Processing your request...")
+        await agent.run(prompt)
+        logger.info("Request processing completed.")
+    except KeyboardInterrupt:
+        logger.warning("Operation interrupted.")
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
