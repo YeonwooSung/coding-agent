@@ -24,27 +24,28 @@ def get_args():
     return parser.parse_args()
 
 
-async def main():
+async def _main(prompt: str):
     agent = Umile()
+    logger.warning("Processing your request...")
+    await agent.run(prompt)
+    logger.info("Request processing completed.")
+
+
+async def main():
     try:
         prompt = input("Enter your prompt: ")
         if not prompt.strip():
             logger.warning("Empty prompt provided.")
             return
 
-        logger.warning("Processing your request...")
-        await agent.run(prompt)
-        logger.info("Request processing completed.")
+        await _main(prompt)
     except KeyboardInterrupt:
         logger.warning("Operation interrupted.")
 
 
-async def main_with_prompt(prompt):
-    agent = Umile()
+async def main_with_prompt(prompt: str):
     try:
-        logger.warning("Processing your request...")
-        await agent.run(prompt)
-        logger.info("Request processing completed.")
+        await _main(prompt)
     except KeyboardInterrupt:
         logger.warning("Operation interrupted.")
 
