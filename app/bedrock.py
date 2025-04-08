@@ -39,7 +39,11 @@ class BedrockClient:
     def __init__(self):
         # Initialize Bedrock client, you need to configure AWS env first
         try:
-            self.client = boto3.client("bedrock-runtime")
+            #TODO need to be able to configure region
+            self.client = boto3.client(
+                "bedrock-runtime",
+                region_name='us-east-1',
+            )
             self.chat = Chat(self.client)
         except Exception as e:
             print(f"Error initializing Bedrock client: {e}")
@@ -217,6 +221,7 @@ class ChatCompletions:
         )
         openai_response = self._convert_bedrock_response_to_openai_format(response)
         return openai_response
+
 
     async def _invoke_bedrock_stream(
         self,
