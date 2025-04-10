@@ -28,6 +28,17 @@ playwright install
 
 ## Running instructions
 
+### CLI
+
 ```bash
-python3 main.py
+python3 cli.py
+```
+
+### Slack-bot server
+
+To run the slack-bot, please set up the dotenv file with slack-related variables.
+Copy the `.env.template` file for the reference.
+
+```bash
+python3 slack_bot.py
 ```
