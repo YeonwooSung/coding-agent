@@ -99,7 +99,7 @@ nvidia-nccl-cu12==2.21.5 ; platform_machine == 'x86_64' and sys_platform == 'lin
 nvidia-nvjitlink-cu12==12.4.127 ; platform_machine == 'x86_64' and sys_platform == 'linux'
 nvidia-nvtx-cu12==12.4.127 ; platform_machine == 'x86_64' and sys_platform == 'linux'
 ollama==0.4.7
-openai==1.68.2
+openai==1.73.0
 orjson==3.10.16 ; platform_python_implementation != 'PyPy'
 packaging==24.2
 pandas==2.2.3
