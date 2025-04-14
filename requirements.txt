@@ -37,7 +37,7 @@ defusedxml==0.7.1
 dill==0.3.8
 distro==1.9.0
 docker==7.1.0
-duckduckgo-search==7.5.3
+duckduckgo-search==8.0.0
 english-words==2.0.1
 evaluate==0.4.3
 faker==37.1.0
