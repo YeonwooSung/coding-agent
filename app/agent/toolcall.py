@@ -35,6 +35,7 @@ class ToolCallAgent(ReActAgent):
     max_steps: int = 30
     max_observe: Optional[Union[int, bool]] = None
 
+
     async def think(self) -> bool:
         """Process current state and decide next actions using tools"""
         if self.next_step_prompt:
@@ -127,6 +128,7 @@ class ToolCallAgent(ReActAgent):
             )
             return False
 
+
     async def act(self) -> str:
         """Execute tool calls and handle their results"""
         if not self.tool_calls:
@@ -161,6 +163,7 @@ class ToolCallAgent(ReActAgent):
             results.append(result)
 
         return "\n\n".join(results)
+
 
     async def execute_tool(self, command: ToolCall) -> str:
         """Execute a single tool call with robust error handling"""
@@ -214,6 +217,7 @@ class ToolCallAgent(ReActAgent):
             logger.exception(error_msg)
             return f"Error: {error_msg}"
 
+
     async def _handle_special_tool(self, name: str, result: Any, **kwargs):
         """Handle special tool execution and state changes"""
         if not self._is_special_tool(name):
@@ -224,10 +228,12 @@ class ToolCallAgent(ReActAgent):
             logger.info(f"🏁 Special tool '{name}' has completed the task!")
             self.state = AgentState.FINISHED
 
+
     @staticmethod
     def _should_finish_execution(**kwargs) -> bool:
         """Determine if tool execution should finish the agent"""
         return True
+
 
     def _is_special_tool(self, name: str) -> bool:
         """Check if tool name is in special tools list"""
