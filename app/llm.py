@@ -752,7 +752,8 @@ class LLM:
 
             return response.choices[0].message
 
-        except TokenLimitExceeded:
+        except TokenLimitExceeded as tle:
+            logger.error(f"Token limit exceeded: {tle}")
             # Re-raise token limit errors without logging
             raise
         except ValueError as ve:

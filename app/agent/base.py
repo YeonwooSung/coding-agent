@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
 from typing import List, Optional
+import asyncio
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -146,6 +147,9 @@ class BaseAgent(BaseModel, ABC):
                     self.handle_stuck_state()
 
                 results.append(f"Step {self.current_step}: {step_result}")
+
+                # sleep for a short duration to avoid overwhelming the system
+                await asyncio.sleep(5)
 
             if self.current_step >= self.max_steps:
                 self.current_step = 0
