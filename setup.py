@@ -15,7 +15,7 @@ setup(
     url="https://github.com/YeonwooSung/coding-agent",
     packages=find_packages(),
     install_requires=[
-        "pydantic~=2.10.4",
+        "pydantic>=2.10.4,<2.12.0",
         "openai>=1.58.1,<1.75.0",
         "tenacity~=9.0.0",
         "pyyaml~=6.0.2",
