@@ -4,6 +4,7 @@ import time
 import uuid
 from datetime import datetime
 from typing import Dict, List, Literal, Optional
+import os
 
 import boto3
 
@@ -39,10 +40,11 @@ class BedrockClient:
     def __init__(self):
         # Initialize Bedrock client, you need to configure AWS env first
         try:
-            #TODO need to be able to configure region
+            _bedrock_region = os.getenv("BEDROCK_REGION", "us-east-1")
+
             self.client = boto3.client(
                 "bedrock-runtime",
-                region_name='us-east-1',
+                region_name=_bedrock_region,
             )
             self.chat = Chat(self.client)
         except Exception as e:

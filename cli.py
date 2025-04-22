@@ -1,6 +1,9 @@
 import asyncio
 import argparse
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # custom modules
 from app.agent.umile import Umile

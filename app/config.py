@@ -28,6 +28,9 @@ class LLMSettings(BaseModel):
     temperature: float = Field(1.0, description="Sampling temperature")
     api_type: str = Field(..., description="Azure, Openai, or Ollama")
     api_version: str = Field(..., description="Azure Openai version if AzureOpenai")
+    bedrock_region: Optional[str] = Field(
+        None, description="AWS region for Bedrock models (e.g., us-east-1)"
+    )
 
 
 class ProxySettings(BaseModel):
