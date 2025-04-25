@@ -8,6 +8,9 @@ import os
 
 import boto3
 
+# custom modules
+from app.constants.llm.bedrock import BEDROCK_CHAT_RETRY_CNT, BEDROCK_CHAT_RETRY_DELAY
+
 
 # Global variables to track the current tool use ID across function calls
 # Tmp solution
@@ -199,6 +202,7 @@ class ChatCompletions:
         }
         return OpenAIResponse(openai_format)
 
+
     async def _invoke_bedrock(
         self,
         model: str,
@@ -214,13 +218,29 @@ class ChatCompletions:
             system_prompt,
             bedrock_messages,
         ) = self._convert_openai_messages_to_bedrock_format(messages)
-        response = self.client.converse(
-            modelId=model,
-            system=system_prompt,
-            messages=bedrock_messages,
-            inferenceConfig={"temperature": temperature, "maxTokens": max_tokens},
-            toolConfig={"tools": tools} if tools else None,
-        )
+
+        success = False
+
+        # retry count to handle bedrock API errors
+        for _ in range(BEDROCK_CHAT_RETRY_CNT):
+            try:
+                response = self.client.converse(
+                    modelId=model,
+                    system=system_prompt,
+                    messages=bedrock_messages,
+                    inferenceConfig={"temperature": temperature, "maxTokens": max_tokens},
+                    toolConfig={"tools": tools} if tools else None,
+                )
+                success = True
+                break
+            except Exception as e:
+                print(f"Error invoking Bedrock model: {e}")
+                time.sleep(BEDROCK_CHAT_RETRY_DELAY)
+
+        # If the retry limit is reached, raise an exception
+        if not success:
+            raise Exception(f"Failed to invoke Bedrock model after {BEDROCK_CHAT_RETRY_CNT} attempts")
+
         openai_response = self._convert_bedrock_response_to_openai_format(response)
         return openai_response
 
