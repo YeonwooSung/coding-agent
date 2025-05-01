@@ -11,3 +11,7 @@ class CodingAgentError(Exception):
 
 class TokenLimitExceeded(CodingAgentError):
     """Exception raised when the token limit is exceeded"""
+
+
+class LlmError(Exception):
+    """Exception raised when there is an error with the LLM"""

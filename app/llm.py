@@ -10,7 +10,7 @@ from openai import (
     OpenAIError,
     RateLimitError,
 )
-from openai.types.chat.chat_completion_message import ChatCompletionMessage
+from openai.types.chat import ChatCompletion, ChatCompletionMessage
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -18,9 +18,9 @@ from tenacity import (
     wait_random_exponential,
 )
 
-from app.bedrock import BedrockClient, OpenAIResponse
+from app.bedrock import BedrockClient
 from app.config import LLMSettings, config
-from app.exceptions import TokenLimitExceeded
+from app.exceptions import TokenLimitExceeded, LlmError
 from app.logger import logger  # Assuming a logger is set up in your app
 from app.schema import (
     ROLE_VALUES,
@@ -88,16 +88,9 @@ class TokenCounter:
                 width, height = image_item["dimensions"]
                 return self._calculate_high_detail_tokens(width, height)
 
-        # Default values when dimensions aren't available or detail level is unknown
-        if detail == "high":
-            # Default to a 1024x1024 image calculation for high detail
-            return self._calculate_high_detail_tokens(1024, 1024)  # 765 tokens
-        elif detail == "medium":
-            # Default to a medium-sized image for medium detail
-            return 1024  # This matches the original default
-        else:
-            # For unknown detail levels, use medium as default
-            return 1024
+        return (
+            self._calculate_high_detail_tokens(1024, 1024) if detail == "high" else 1024
+        )
 
     def _calculate_high_detail_tokens(self, width: int, height: int) -> int:
         """Calculate tokens for high detail images based on dimensions"""
@@ -735,8 +728,9 @@ class LLM:
                     temperature if temperature is not None else self.temperature
                 )
 
-            response: OpenAIResponse = await self.client.chat.completions.create(
-                **params, stream=False
+            params["stream"] = False  # Always use non-streaming for tool requests
+            response: ChatCompletion = await self.client.chat.completions.create(
+                **params
             )
 
             # Check if response is valid
@@ -755,10 +749,14 @@ class LLM:
         except TokenLimitExceeded as tle:
             logger.error(f"Token limit exceeded: {tle}")
             # Re-raise token limit errors without logging
-            raise
+            raise LlmError(
+                "Token limit exceeded"
+            ) from tle
         except ValueError as ve:
             logger.error(f"Validation error in ask_tool: {ve}")
-            raise
+            raise LlmError(
+                "Validation error in ask_tool"
+            ) from ve
         except OpenAIError as oe:
             logger.error(f"OpenAI API error: {oe}")
             if isinstance(oe, AuthenticationError):
@@ -767,7 +765,9 @@ class LLM:
                 logger.error("Rate limit exceeded. Consider increasing retry attempts.")
             elif isinstance(oe, APIError):
                 logger.error(f"API error: {oe}")
-            raise
+
+            raise LlmError("OpenAI API error") from oe
+
         except Exception as e:
             logger.error(f"Unexpected error in ask_tool: {e}")
-            raise
+            raise LlmError("Unexpected error in ask_tool") from e
