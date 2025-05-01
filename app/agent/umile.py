@@ -103,8 +103,9 @@ class Umile(ToolCallAgent):
     ) -> None:
         """Connect to an MCP server and add its tools."""
         if use_stdio:
+            args_ = stdio_args or []
             await self.mcp_clients.connect_stdio(
-                server_url, stdio_args or [], stdio_env, server_id
+                server_url, args_, stdio_env, server_id
             )
             self.connected_servers[server_id or server_url] = server_url
         else:

@@ -63,7 +63,10 @@ class MCPAgent(ToolCallAgent):
         elif self.connection_type == "stdio":
             if not command:
                 raise ValueError("Command is required for stdio connection")
-            await self.mcp_clients.connect_stdio(command=command, args=args or [])
+            args_ = args or []
+            await self.mcp_clients.connect_stdio(
+                command=command, args=args_, env=None
+            )
         else:
             raise ValueError(f"Unsupported connection type: {self.connection_type}")
 
@@ -90,12 +93,22 @@ class MCPAgent(ToolCallAgent):
         Returns:
             A tuple of (added_tools, removed_tools)
         """
-        if not self.mcp_clients.session:
+        if not self.mcp_clients.sessions:
             return [], []
 
         # Get current tool schemas directly from the server
-        response = await self.mcp_clients.session.list_tools()
-        current_tools = {tool.name: tool.inputSchema for tool in response.tools}
+        if not hasattr(self.mcp_clients, "session"):
+            if len(self.mcp_clients.sessions) > 1:
+                response = await self.mcp_clients.sessions[0].list_tools()
+            else:
+                response = None
+        else:
+            response = await self.mcp_clients.session.list_tools()
+
+        if not response:
+            current_tools = {}
+        else:
+            current_tools = {tool.name: tool.inputSchema for tool in response.tools}
 
         # Determine added, removed, and changed tools
         current_names = set(current_tools.keys())
@@ -134,7 +147,7 @@ class MCPAgent(ToolCallAgent):
     async def think(self) -> bool:
         """Process current state and decide next action."""
         # Check MCP session and tools availability
-        if not self.mcp_clients.session or not self.mcp_clients.tool_map:
+        if not self.mcp_clients.sessions or not self.mcp_clients.tool_map:
             logger.info("MCP service is no longer available, ending interaction")
             self.state = AgentState.FINISHED
             return False
@@ -169,11 +182,13 @@ class MCPAgent(ToolCallAgent):
         # Terminate if the tool name is 'terminate'
         return name.lower() == "terminate"
 
+
     async def cleanup(self) -> None:
         """Clean up MCP connection when done."""
-        if self.mcp_clients.session:
+        if self.mcp_clients.sessions:
             await self.mcp_clients.disconnect()
             logger.info("MCP connection closed")
+
 
     async def run(self, request: Optional[str] = None) -> str:
         """Run the agent with cleanup when done."""

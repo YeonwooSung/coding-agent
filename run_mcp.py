@@ -35,6 +35,7 @@ class MCPRunner:
 
         logger.info(f"Connected to MCP server via {connection_type}")
 
+
     async def run_interactive(self) -> None:
         """Run the agent in interactive mode."""
         print("\nMCP Agent Interactive Mode (type 'exit' to quit)\n")
