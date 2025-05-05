@@ -129,7 +129,7 @@ sacrebleu==2.5.1
 safetensors==0.5.3
 scikit-image==0.25.2
 scipy==1.15.2
-setuptools==78.0.2
+setuptools==80.3.1
 six==1.17.0
 sniffio==1.3.1
 soupsieve==2.6
