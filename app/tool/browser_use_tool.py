@@ -266,9 +266,10 @@ class BrowserUseTool(BaseTool, Generic[Context]):
                         return ToolResult(
                             error="Query is required for 'web_search' action"
                         )
-                    search_results = await self.web_search_tool.execute(query)
+                    search_exec_result = await self.web_search_tool.execute(query)
+                    search_results = search_exec_result.results
 
-                    if search_results:
+                    if search_results and len(search_results) > 0:
                         # Navigate to the first search result
                         first_result = search_results[0]
                         if isinstance(first_result, dict) and "url" in first_result:
@@ -276,22 +277,13 @@ class BrowserUseTool(BaseTool, Generic[Context]):
                         elif isinstance(first_result, str):
                             url_to_navigate = first_result
                         else:
-                            return ToolResult(
-                                error=f"Invalid search result format: {first_result}"
-                            )
+                            return search_exec_result
 
                         page = await context.get_current_page()
                         await page.goto(url_to_navigate)
                         await page.wait_for_load_state()
 
-                        return ToolResult(
-                            output=f"Searched for '{query}' and navigated to first result: {url_to_navigate}\nAll results:"
-                            + "\n".join([str(r) for r in search_results])
-                        )
-                    else:
-                        return ToolResult(
-                            error=f"No search results found for '{query}'"
-                        )
+                    return search_exec_result
 
                 # Element interaction actions
                 elif action == "click_element":

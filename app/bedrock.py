@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime
 from typing import Dict, List, Literal, Optional
 import os
+import asyncio
 
 import boto3
 
@@ -235,7 +236,7 @@ class ChatCompletions:
                 break
             except Exception as e:
                 print(f"Error invoking Bedrock model: {e}")
-                time.sleep(BEDROCK_CHAT_RETRY_DELAY)
+                await asyncio.sleep(BEDROCK_CHAT_RETRY_DELAY)
 
         # If the retry limit is reached, raise an exception
         if not success:

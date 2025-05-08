@@ -39,12 +39,18 @@ def run_agent(prompt: str):
     # run asyncio
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    result = loop.run_until_complete(agent.run(prompt))
-    loop.close()
-    logger.debug(f"에이전트가 '{prompt}' 명령을 처리한 결과: {result}")
+    try:
+        result = loop.run_until_complete(agent.run(prompt))
+        logger.debug(f"에이전트가 '{prompt}' 명령을 처리한 결과: {result}")
+        return "✅ 작업이 완료되었습니다."
 
-    logger.info(f"에이전트가 '{prompt}' 명령 처리를 완료했습니다!")
-    return "작업이 완료되었습니다."
+    except Exception as e:
+        logger.error(f"에이전트 실행 중 오류 발생: {str(e)}")
+        return f"❌ 에이전트 실행 중 오류 발생: {str(e)}"
+
+    finally:
+        loop.close()
+        logger.info(f"에이전트가 '{prompt}' 명령 처리를 완료했습니다!")
 
 
 def notify_completion(future, channel_id, thread_ts):

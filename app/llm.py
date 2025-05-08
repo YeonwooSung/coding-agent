@@ -186,6 +186,8 @@ class LLM:
     def __init__(
         self, config_name: str = "default", llm_config: Optional[LLMSettings] = None
     ):
+        self.use_bedrock = False
+
         if not hasattr(self, "client"):  # Only initialize if not already initialized
             llm_config = llm_config or config.llm
             llm_config = llm_config.get(config_name, llm_config["default"])
@@ -221,6 +223,7 @@ class LLM:
                 )
             elif self.api_type == "aws":
                 self.client = BedrockClient()
+                self.use_bedrock = True
             else:
                 self.client = AsyncOpenAI(api_key=self.api_key, base_url=self.base_url)
 
@@ -421,6 +424,9 @@ class LLM:
                 response = await self.client.chat.completions.create(
                     **params, stream=False
                 )
+                if self.use_bedrock:
+                    # re-init the client to avoid connection issues
+                    self.client = BedrockClient()
 
                 if not response.choices or not response.choices[0].message.content:
                     raise ValueError("Empty or invalid response from LLM")
@@ -434,6 +440,11 @@ class LLM:
 
             # Streaming request, For streaming, update estimated token count before making the request
             self.update_token_count(input_tokens)
+
+            if self.use_bedrock:
+                # re-init the client to avoid connection issues
+                # to avoid the stream end issue, we re-init the client before streaming
+                self.client = BedrockClient()
 
             response = await self.client.chat.completions.create(**params, stream=True)
 
@@ -595,6 +606,10 @@ class LLM:
                 if not response.choices or not response.choices[0].message.content:
                     raise ValueError("Empty or invalid response from LLM")
 
+                if self.use_bedrock:
+                    # re-init the client to avoid connection issues
+                    self.client = BedrockClient()
+
                 self.update_token_count(response.usage.prompt_tokens)
                 return response.choices[0].message.content
 
@@ -610,6 +625,10 @@ class LLM:
 
             print()  # Newline after streaming
             full_response = "".join(collected_messages).strip()
+
+            if self.use_bedrock:
+                # re-init the client to avoid connection issues
+                self.client = BedrockClient()
 
             if not full_response:
                 raise ValueError("Empty response from streaming LLM")
@@ -665,6 +684,7 @@ class LLM:
 
         Returns:
             ChatCompletionMessage: The model's response
+            or None if the response is empty
 
         Raises:
             TokenLimitExceeded: If token limits are exceeded
@@ -732,6 +752,10 @@ class LLM:
             response: ChatCompletion = await self.client.chat.completions.create(
                 **params
             )
+
+            if self.use_bedrock:
+                # re-init the client to avoid connection issues
+                self.client = BedrockClient()
 
             # Check if response is valid
             if not response.choices or not response.choices[0].message:

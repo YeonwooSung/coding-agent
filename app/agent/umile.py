@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
-
 from pydantic import Field, model_validator
 
+# custom modules
 from app.agent.browser import BrowserContextHelper
 from app.agent.toolcall import ToolCallAgent
 from app.config import config
@@ -25,7 +25,7 @@ class Umile(ToolCallAgent):
     next_step_prompt: str = NEXT_STEP_PROMPT
 
     max_observe: int = 10000
-    max_steps: int = 30
+    max_steps: int = 50
 
     # MCP clients for remote tool access
     mcp_clients: MCPClients = Field(default_factory=MCPClients)
