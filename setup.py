@@ -22,7 +22,7 @@ setup(
         "loguru~=0.7.3",
         "numpy",
         "datasets~=3.2.0",
-        "html2text~=2024.2.26",
+        "html2text>=2024.2.26,<2025.5.0",
         "gymnasium~=1.0.0",
         "pillow~=10.4.0",
         "browsergym~=0.13.3",
