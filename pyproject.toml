@@ -141,7 +141,7 @@ dependencies = [
     "tqdm==4.67.1",
     "transformers==4.50.1",
     "types-requests==2.32.0.20250306",
-    "types-tqdm==4.67.0.20250319",
+    "types-tqdm==4.67.0.20250417",
     "typing-extensions==4.12.2",
     "typing-inspect==0.9.0",
     "tzdata==2025.2",
