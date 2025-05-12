@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="coding_agent",
-    version="0.1.3",
+    version="0.1.4",
     author="Yeonwoo Sung",
     author_email="neos960518@gmail.com",
     description="A versatile agent that can solve various tasks using multiple tools",
