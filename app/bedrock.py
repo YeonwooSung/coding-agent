@@ -8,6 +8,7 @@ import os
 import asyncio
 
 import boto3
+from botocore.config import Config
 
 # custom modules
 from app.constants.llm.bedrock import BEDROCK_CHAT_RETRY_CNT, BEDROCK_CHAT_RETRY_DELAY
@@ -46,9 +47,19 @@ class BedrockClient:
         try:
             _bedrock_region = os.getenv("BEDROCK_REGION", "us-east-1")
 
+            # set up AWS boto3 retries
+            # <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/retries.html>
+            config = Config(
+                retries = {
+                    'max_attempts': 10,
+                    'mode': 'adaptive'
+                }
+            )
+
             self.client = boto3.client(
                 "bedrock-runtime",
                 region_name=_bedrock_region,
+                config=config,
             )
             self.chat = Chat(self.client)
         except Exception as e:
