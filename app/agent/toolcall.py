@@ -232,6 +232,15 @@ class ToolCallAgent(ReActAgent):
     @staticmethod
     def _should_finish_execution(**kwargs) -> bool:
         """Determine if tool execution should finish the agent"""
+        if "name" in kwargs:
+            try:
+                if kwargs["name"].lower() in ToolCallAgent.special_tool_names:
+                    return True
+            except Exception as e:
+                logger.warning(
+                    f"Error checking special tool name: {kwargs['name']}, error: {e}"
+                )
+                return False
         return True
 
 

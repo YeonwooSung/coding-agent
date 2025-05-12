@@ -9,6 +9,7 @@ from app.llm import LLM
 from app.logger import logger
 from app.sandbox.client import SANDBOX_CLIENT
 from app.schema import ROLE_TYPE, AgentState, Memory, Message
+from app.constants.llm.base import BASE_LLM_SLEEP_TIME
 
 
 class BaseAgent(BaseModel, ABC):
@@ -140,7 +141,16 @@ class BaseAgent(BaseModel, ABC):
             ):
                 self.current_step += 1
                 logger.info(f"Executing step {self.current_step}/{self.max_steps}")
-                step_result = await self.step()
+
+                try:
+                    step_result = await self.step()
+                except Exception as e:
+                    logger.error(f"Error during step execution: {e}")
+
+                    if hasattr(e, "__cause__"):
+                        step_result = f"Error during step execution: {e.__cause__}"
+                    else:
+                        step_result = f"Error during step execution: {e}"
 
                 # Check for stuck state
                 if self.is_stuck():
@@ -149,7 +159,7 @@ class BaseAgent(BaseModel, ABC):
                 results.append(f"Step {self.current_step}: {step_result}")
 
                 # sleep for a short duration to avoid overwhelming the system
-                await asyncio.sleep(5)
+                await asyncio.sleep(BASE_LLM_SLEEP_TIME)
 
             if self.current_step >= self.max_steps:
                 self.current_step = 0

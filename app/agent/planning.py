@@ -113,11 +113,17 @@ class PlanningAgent(ToolCallAgent):
         )
         return result.output if hasattr(result, "output") else str(result)
 
+
     async def run(self, request: Optional[str] = None) -> str:
         """Run the agent with an optional initial request."""
-        if request:
-            await self.create_initial_plan(request)
-        return await super().run()
+        try:
+            if request:
+                await self.create_initial_plan(request)
+            return await super().run()
+        except Exception as e:
+            logger.error(f"Error during agent execution: {e}")
+            return str(e)
+
 
     async def update_plan_status(self, tool_call_id: str) -> None:
         """
