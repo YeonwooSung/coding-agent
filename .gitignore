@@ -181,3 +181,7 @@ cython_debug/
 
 # workspace
 workspace/
+
+
+# node modules
+node_modules/

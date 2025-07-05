@@ -1,0 +1,17 @@
+{
+  "name": "coding-agent",
+  "version": "1.0.0",
+  "description": "AI-agent for coding.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.53.2",
+    "@types/node": "^24.0.10"
+  }
+}
