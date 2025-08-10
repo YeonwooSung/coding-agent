@@ -2,6 +2,9 @@
 
 AI-agent for coding.
 
+![slack](./assets/slack_screenshot.png)
+![running_screenshots](./assets/running_screenshot.png)
+
 ## Pre-requisite
 
 First, create the config for LLM call.
