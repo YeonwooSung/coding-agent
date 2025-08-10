@@ -436,6 +436,7 @@ class LLM:
                     response.usage.prompt_tokens, response.usage.completion_tokens
                 )
 
+                #TODO save input, output tokens to the database
                 return response.choices[0].message.content
 
             # Streaming request, For streaming, update estimated token count before making the request
@@ -468,6 +469,7 @@ class LLM:
             )
             self.total_completion_tokens += completion_tokens
 
+            #TODO save input, output tokens to the database
             return full_response
 
         except TokenLimitExceeded:
@@ -488,6 +490,7 @@ class LLM:
         except Exception:
             logger.exception(f"Unexpected error in ask")
             raise
+
 
     @retry(
         wait=wait_random_exponential(min=1, max=60),
@@ -611,6 +614,8 @@ class LLM:
                     self.client = BedrockClient()
 
                 self.update_token_count(response.usage.prompt_tokens)
+
+                #TODO save input, output tokens to the database (include img_urls)
                 return response.choices[0].message.content
 
             # Handle streaming request
@@ -633,6 +638,7 @@ class LLM:
             if not full_response:
                 raise ValueError("Empty response from streaming LLM")
 
+            #TODO save input, output tokens to the database (include img_urls)
             return full_response
 
         except TokenLimitExceeded:
@@ -768,6 +774,7 @@ class LLM:
                 response.usage.prompt_tokens, response.usage.completion_tokens
             )
 
+            #TODO save input, output tokens to the database
             return response.choices[0].message
 
         except TokenLimitExceeded as tle:
