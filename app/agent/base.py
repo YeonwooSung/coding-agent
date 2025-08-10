@@ -10,6 +10,7 @@ from app.logger import logger
 from app.sandbox.client import SANDBOX_CLIENT
 from app.schema import ROLE_TYPE, AgentState, Memory, Message
 from app.constants.llm.base import BASE_LLM_SLEEP_TIME
+from app.exceptions import LlmCriticalError
 
 
 class BaseAgent(BaseModel, ABC):
@@ -144,6 +145,13 @@ class BaseAgent(BaseModel, ABC):
 
                 try:
                     step_result = await self.step()
+
+                except LlmCriticalError as lce:
+                    # Found that in some cases, the LLM API call fails with a critical error
+                    # When this happens, the agent workflow falls into an 'unrecoverable' state
+                    # To handle this, we just throw the error to the top level and let the caller handle it.
+                    logger.error(f"Critical error during step execution: {lce}")
+                    raise lce
                 except Exception as e:
                     logger.error(f"Error during step execution: {e}")
 

@@ -15,3 +15,11 @@ class TokenLimitExceeded(CodingAgentError):
 
 class LlmError(Exception):
     """Exception raised when there is an error with the LLM"""
+
+
+class LlmCriticalError(Exception):
+    """Exception raised for critical errors in LLM operations"""
+
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message

@@ -11,6 +11,7 @@ import boto3
 from botocore.config import Config
 
 # custom modules
+from app.exceptions import LlmCriticalError
 from app.constants.llm.bedrock import BEDROCK_CHAT_RETRY_CNT, BEDROCK_CHAT_RETRY_DELAY
 
 
@@ -251,7 +252,7 @@ class ChatCompletions:
 
         # If the retry limit is reached, raise an exception
         if not success:
-            raise Exception(f"Failed to invoke Bedrock model after {BEDROCK_CHAT_RETRY_CNT} attempts")
+            raise LlmCriticalError(f"Failed to invoke Bedrock model after {BEDROCK_CHAT_RETRY_CNT} attempts")
 
         openai_response = self._convert_bedrock_response_to_openai_format(response)
         return openai_response
@@ -336,6 +337,7 @@ class ChatCompletions:
             bedrock_response
         )
         return openai_response
+
 
     def create(
         self,

@@ -74,6 +74,7 @@ class PlanningFlow(BaseFlow):
         if not self.executor_keys:
             self.executor_keys = list(self.agents.keys())
 
+
     def get_executor(self, step_type: Optional[str] = None) -> BaseAgent:
         """
         Get an appropriate executor agent for the current step.
@@ -90,6 +91,7 @@ class PlanningFlow(BaseFlow):
 
         # Fallback to primary agent
         return self.primary_agent
+
 
     async def execute(self, input_text: str) -> str:
         """Execute the planning flow with agents."""
@@ -132,6 +134,7 @@ class PlanningFlow(BaseFlow):
         except Exception as e:
             logger.error(f"Error in PlanningFlow: {str(e)}")
             return f"Execution failed: {str(e)}"
+
 
     async def _create_initial_plan(self, request: str) -> None:
         """Create an initial plan based on the request using the flow's LLM and PlanningTool."""
@@ -191,6 +194,7 @@ class PlanningFlow(BaseFlow):
                 "steps": ["Analyze request", "Execute task", "Verify results"],
             }
         )
+
 
     async def _get_current_step_info(self) -> tuple[Optional[int], Optional[dict]]:
         """
@@ -255,6 +259,7 @@ class PlanningFlow(BaseFlow):
         except Exception as e:
             logger.warning(f"Error finding current step index: {e}")
             return None, None
+
 
     async def _execute_step(self, executor: BaseAgent, step_info: dict) -> str:
         """Execute the current step with the specified agent using agent.run()."""

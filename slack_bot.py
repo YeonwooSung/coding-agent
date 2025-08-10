@@ -8,7 +8,7 @@ import asyncio
 dotenv.load_dotenv()
 
 # custom modules
-from app.agent.umile import Umile
+from run_flow import run_flow_from_prompt
 from app.logger import logger
 from app.constants.slack_bot import (
     THREADPOOL_SIZE,
@@ -34,13 +34,11 @@ def run_agent(prompt: str):
     """
     logger.info(f"에이전트가 '{prompt}' 명령을 처리 중입니다...")
 
-    agent = Umile()
-
     # run asyncio
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
-        result = loop.run_until_complete(agent.run(prompt))
+        result = loop.run_until_complete(run_flow_from_prompt(prompt))
         logger.debug(f"에이전트가 '{prompt}' 명령을 처리한 결과: {result}")
         return "✅ 작업이 완료되었습니다."
 

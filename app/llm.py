@@ -653,6 +653,7 @@ class LLM:
             logger.error(f"Unexpected error in ask_with_images: {e}")
             raise
 
+
     @retry(
         wait=wait_random_exponential(min=1, max=60),
         stop=stop_after_attempt(6),
@@ -748,6 +749,7 @@ class LLM:
                     temperature if temperature is not None else self.temperature
                 )
 
+
             params["stream"] = False  # Always use non-streaming for tool requests
             response: ChatCompletion = await self.client.chat.completions.create(
                 **params
@@ -759,9 +761,7 @@ class LLM:
 
             # Check if response is valid
             if not response.choices or not response.choices[0].message:
-                print(response)
-                # raise ValueError("Invalid or empty response from LLM")
-                return None
+                raise ValueError("Invalid or empty response from LLM")
 
             # Update token counts
             self.update_token_count(
