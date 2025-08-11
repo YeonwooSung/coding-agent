@@ -14,6 +14,7 @@ from app.config import config
 from app.llm import LLM
 from app.tool.base import BaseTool, ToolResult
 from app.tool.web_search import WebSearch
+from app.exceptions import LlmCriticalError
 
 
 _BROWSER_DESCRIPTION = """
@@ -534,6 +535,9 @@ Page content:
 
                 else:
                     return ToolResult(error=f"Unknown action: {action}")
+
+            except LlmCriticalError as lce:
+                raise lce
 
             except Exception as e:
                 return ToolResult(error=f"Browser action '{action}' failed: {str(e)}")

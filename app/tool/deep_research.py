@@ -6,7 +6,7 @@ from typing import List, Optional, Set
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from app.exceptions import ToolError
+from app.exceptions import ToolError, LlmCriticalError
 from app.llm import LLM
 from app.logger import logger
 from app.schema import ToolChoice
@@ -279,6 +279,10 @@ class DeepResearch(BaseTool):
 
             logger.info(f"Optimized query: '{optimized_query}'")
             return optimized_query
+
+        except LlmCriticalError as lce:
+            raise lce
+
         except Exception as e:
             logger.warning(f"Failed to optimize query: {str(e)}")
             return query  # Fall back to original query on error

@@ -20,7 +20,7 @@ from tenacity import (
 
 from app.bedrock import BedrockClient
 from app.config import LLMSettings, config
-from app.exceptions import TokenLimitExceeded, LlmError
+from app.exceptions import TokenLimitExceeded, LlmError, LlmCriticalError
 from app.logger import logger  # Assuming a logger is set up in your app
 from app.schema import (
     ROLE_VALUES,
@@ -776,6 +776,9 @@ class LLM:
 
             #TODO save input, output tokens to the database
             return response.choices[0].message
+
+        except LlmCriticalError as lce:
+            raise lce
 
         except TokenLimitExceeded as tle:
             logger.error(f"Token limit exceeded: {tle}")

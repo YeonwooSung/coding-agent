@@ -84,6 +84,7 @@ class BaseAgent(BaseModel, ABC):
         finally:
             self.state = previous_state  # Revert to previous state
 
+
     def update_memory(
         self,
         role: ROLE_TYPE,  # type: ignore
@@ -151,7 +152,8 @@ class BaseAgent(BaseModel, ABC):
                     # When this happens, the agent workflow falls into an 'unrecoverable' state
                     # To handle this, we just throw the error to the top level and let the caller handle it.
                     logger.error(f"Critical error during step execution: {lce}")
-                    raise lce
+                    break
+
                 except Exception as e:
                     logger.error(f"Error during step execution: {e}")
 
@@ -159,6 +161,10 @@ class BaseAgent(BaseModel, ABC):
                         step_result = f"Error during step execution: {e.__cause__}"
                     else:
                         step_result = f"Error during step execution: {e}"
+
+                if self.state == AgentState.FINISHED:
+                    # As the agent is finished, we should not continue to run the loop
+                    break
 
                 # Check for stuck state
                 if self.is_stuck():
@@ -175,6 +181,7 @@ class BaseAgent(BaseModel, ABC):
                 results.append(f"Terminated: Reached max steps ({self.max_steps})")
         await SANDBOX_CLIENT.cleanup()
         return "\n".join(results) if results else "No steps executed"
+
 
     @abstractmethod
     async def step(self) -> str:

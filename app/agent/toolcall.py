@@ -4,7 +4,7 @@ from typing import Any, List, Optional, Union
 from pydantic import Field
 
 from app.agent.react import ReActAgent
-from app.exceptions import TokenLimitExceeded
+from app.exceptions import TokenLimitExceeded, LlmCriticalError
 from app.logger import logger
 from app.prompt.toolcall import NEXT_STEP_PROMPT, SYSTEM_PROMPT
 from app.schema import TOOL_CHOICE_TYPE, AgentState, Message, ToolCall, ToolChoice
@@ -54,6 +54,10 @@ class ToolCallAgent(ReActAgent):
                 tools=self.available_tools.to_params(),
                 tool_choice=self.tool_choices,
             )
+        except LlmCriticalError as lce:
+            logger.error(f"Critical LLM error: {lce}")
+            raise lce
+
         except ValueError:
             raise
         except Exception as e:
@@ -234,7 +238,12 @@ class ToolCallAgent(ReActAgent):
         """Determine if tool execution should finish the agent"""
         if "name" in kwargs:
             try:
-                if kwargs["name"].lower() in ToolCallAgent.special_tool_names:
+                if not hasattr(ToolCallAgent, "special_tool_names"):
+                    special_tool_names = ["terminate"]
+                else:
+                    special_tool_names = ToolCallAgent.special_tool_names
+
+                if kwargs["name"].lower() in special_tool_names:
                     return True
             except Exception as e:
                 logger.warning(

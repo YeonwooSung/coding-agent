@@ -15,6 +15,7 @@ from app.constants.slack_bot import (
     RESULT_OK_MSG,
     RESULT_ERROR_MSG,
 )
+from app.exceptions import LlmCriticalError
 
 
 _SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
@@ -41,6 +42,10 @@ def run_agent(prompt: str):
         result = loop.run_until_complete(run_flow_from_prompt(prompt))
         logger.debug(f"에이전트가 '{prompt}' 명령을 처리한 결과: {result}")
         return "✅ 작업이 완료되었습니다."
+
+    except LlmCriticalError as lce:
+        logger.error(f"에이전트 실행 중 LLM 오류 발생: {lce}")
+        return f"❌ LLM 오류 발생: {str(lce)}"
 
     except Exception as e:
         logger.error(f"에이전트 실행 중 오류 발생: {str(e)}")
