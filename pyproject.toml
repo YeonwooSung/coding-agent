@@ -93,7 +93,7 @@ dependencies = [
     "nltk==3.9.1",
     "numpy==2.2.4",
     "ollama==0.4.7",
-    "openai==1.74.0",
+    "openai==1.99.8",
     "orjson==3.10.16 ; platform_python_implementation != 'PyPy'",
     "packaging==24.2",
     "pandas==2.2.3",
