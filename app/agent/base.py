@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
 from typing import List, Optional
 import asyncio
+from tenacity import RetryError
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -147,7 +148,7 @@ class BaseAgent(BaseModel, ABC):
                 try:
                     step_result = await self.step()
 
-                except LlmCriticalError as lce:
+                except (LlmCriticalError, RetryError) as lce:
                     # Found that in some cases, the LLM API call fails with a critical error
                     # When this happens, the agent workflow falls into an 'unrecoverable' state
                     # To handle this, we just throw the error to the top level and let the caller handle it.

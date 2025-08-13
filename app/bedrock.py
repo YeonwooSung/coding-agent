@@ -52,9 +52,11 @@ class BedrockClient:
             # <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/retries.html>
             config = Config(
                 retries = {
-                    'max_attempts': 10,
-                    'mode': 'adaptive'
-                }
+                    'max_attempts': 3,
+                    'mode': 'adaptive',
+                },
+                read_timeout=60,
+                connect_timeout=60,
             )
 
             self.client = boto3.client(
