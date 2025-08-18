@@ -86,6 +86,12 @@ class ToolCallAgent(ReActAgent):
         logger.info(
             f"🛠️ {self.name} selected {len(tool_calls) if tool_calls else 0} tools to use"
         )
+
+        # If no tool calls are provided..?
+        if not tool_calls or len(tool_calls) == 0:
+            self.tool_choices = ToolChoice.NONE
+            return False
+
         if tool_calls:
             logger.info(
                 f"🧰 Tools being prepared: {[call.function.name for call in tool_calls]}"
