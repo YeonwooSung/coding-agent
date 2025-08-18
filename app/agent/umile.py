@@ -25,7 +25,7 @@ class Umile(ToolCallAgent):
     next_step_prompt: str = NEXT_STEP_PROMPT
 
     max_observe: int = 10000
-    max_steps: int = 50
+    max_steps: int = 20
 
     # MCP clients for remote tool access
     mcp_clients: MCPClients = Field(default_factory=MCPClients)
