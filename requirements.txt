@@ -83,7 +83,7 @@ botocore==1.40.2
     #   s3transfer
 brotli==1.1.0
     # via crawl4ai
-browser-use==0.1.40
+browser-use==0.1.45
     # via coding-agent
 browsergym==0.13.3
     # via coding-agent
@@ -268,7 +268,7 @@ h11==0.16.0
     #   coding-agent
     #   httpcore
     #   uvicorn
-h2==4.2.0
+h2==4.3.0
     # via httpx
 hpack==4.1.0
     # via h2
