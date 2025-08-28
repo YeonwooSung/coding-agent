@@ -6,7 +6,7 @@ aiohappyeyeballs==2.6.1
     # via
     #   aiohttp
     #   coding-agent
-aiohttp==3.12.14
+aiohttp==3.12.15
     # via
     #   coding-agent
     #   crawl4ai
@@ -83,7 +83,7 @@ botocore==1.40.2
     #   s3transfer
 brotli==1.1.0
     # via crawl4ai
-browser-use==0.1.40
+browser-use==0.1.45
     # via coding-agent
 browsergym==0.13.3
     # via coding-agent
@@ -423,7 +423,7 @@ marshmallow==3.26.1
     # via
     #   coding-agent
     #   dataclasses-json
-mcp==1.10.0
+mcp==1.13.1
     # via coding-agent
 mdurl==0.1.2
     # via markdown-it-py
@@ -688,7 +688,7 @@ regex==2024.11.6
     #   transformers
 reportlab==4.3.1
     # via coding-agent
-requests==2.32.4
+requests==2.32.5
     # via
     #   baidusearch
     #   browser-use
@@ -738,7 +738,7 @@ scipy==1.15.2
     #   browsergym-assistantbench
     #   coding-agent
     #   scikit-image
-setuptools==78.1.1
+setuptools==80.9.0
     # via
     #   browser-use
     #   coding-agent
@@ -774,7 +774,7 @@ sse-starlette==2.2.1
     # via
     #   coding-agent
     #   mcp
-starlette==0.47.2
+starlette==0.47.3
     # via
     #   coding-agent
     #   fastapi
@@ -833,7 +833,7 @@ tqdm==4.67.1
     #   transformers
     #   weblinx
     #   weblinx-browsergym
-transformers==4.53.0
+transformers==4.55.4
     # via
     #   coding-agent
     #   libvisualwebarena
