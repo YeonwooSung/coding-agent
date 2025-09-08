@@ -357,7 +357,7 @@ jsonschema==4.25.0
     #   mcp
 jsonschema-specifications==2025.4.1
     # via jsonschema
-langchain-anthropic==0.3.3
+langchain-anthropic==0.3.19
     # via
     #   browser-use
     #   coding-agent
