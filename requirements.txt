@@ -688,7 +688,7 @@ regex==2024.11.6
     #   transformers
 reportlab==4.3.1
     # via coding-agent
-requests==2.32.4
+requests==2.32.5
     # via
     #   baidusearch
     #   browser-use
