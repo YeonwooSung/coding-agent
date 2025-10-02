@@ -16,6 +16,7 @@ from app.constants.slack_bot import (
     RESULT_ERROR_MSG,
 )
 from app.exceptions import LlmCriticalError
+from app.dataset.collector import global_collector
 
 
 _SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
@@ -54,6 +55,9 @@ def run_agent(prompt: str):
     finally:
         loop.close()
         logger.info(f"에이전트가 '{prompt}' 명령 처리를 완료했습니다!")
+
+        # dump collected data
+        global_collector.dump(reset=True)
 
 
 def notify_completion(future, channel_id, thread_ts):
@@ -138,6 +142,17 @@ def handle_errors(error, body, logger):
     """
     logger.error(f"에러 발생: {error}")
     logger.debug(f"에러 발생 시 본문: {body}")
+
+@app.event("app_uninstalled")
+def handle_app_uninstalled(event, logger):
+    """
+    앱이 워크스페이스에서 제거될 때 호출되는 이벤트 핸들러입니다.
+    """
+    logger.warning("앱이 워크스페이스에서 제거되었습니다. 모든 리소스를 정리합니다.")
+    executor.shutdown(wait=False)
+    logger.info("ThreadPoolExecutor가 종료되었습니다.")
+
+    global_collector.dump(reset=True)
 
 
 if __name__ == "__main__":

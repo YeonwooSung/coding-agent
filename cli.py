@@ -8,6 +8,7 @@ load_dotenv()
 # custom modules
 from app.agent.umile import Umile
 from app.logger import logger
+from app.dataset.collector import global_collector
 
 
 def get_args():
@@ -33,6 +34,7 @@ async def _main(prompt: str):
     logger.warning("Processing your request...")
     await agent.run(prompt)
     logger.info("Request processing completed.")
+    global_collector.dump(reset=True)
 
 
 async def main():

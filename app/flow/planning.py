@@ -132,6 +132,8 @@ class PlanningFlow(BaseFlow):
 
             return result
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             logger.error(f"Error in PlanningFlow: {str(e)}")
             return f"Execution failed: {str(e)}"
 

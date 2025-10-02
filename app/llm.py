@@ -29,6 +29,7 @@ from app.schema import (
     Message,
     ToolChoice,
 )
+from app.dataset.collector import global_collector
 
 
 REASONING_MODELS = ["o1", "o3-mini"]
@@ -436,8 +437,10 @@ class LLM:
                     response.usage.prompt_tokens, response.usage.completion_tokens
                 )
 
-                #TODO save input, output tokens to the database
-                return response.choices[0].message.content
+                # collect input, output tokens
+                output_tokens = response.choices[0].message.content
+                global_collector.collect(messages, output_tokens)
+                return output_tokens
 
             # Streaming request, For streaming, update estimated token count before making the request
             self.update_token_count(input_tokens)
@@ -469,7 +472,8 @@ class LLM:
             )
             self.total_completion_tokens += completion_tokens
 
-            #TODO save input, output tokens to the database
+            # collect input, output tokens
+            global_collector.collect(messages, full_response)
             return full_response
 
         except TokenLimitExceeded:
@@ -615,8 +619,10 @@ class LLM:
 
                 self.update_token_count(response.usage.prompt_tokens)
 
-                #TODO save input, output tokens to the database (include img_urls)
-                return response.choices[0].message.content
+                # collect input, output tokens to the database (include img_urls)
+                output_tokens = response.choices[0].message.content
+                global_collector.collect(messages, output_tokens)
+                return output_tokens
 
             # Handle streaming request
             self.update_token_count(input_tokens)
@@ -638,7 +644,8 @@ class LLM:
             if not full_response:
                 raise ValueError("Empty response from streaming LLM")
 
-            #TODO save input, output tokens to the database (include img_urls)
+            # collect input, output tokens to the database (include img_urls)
+            global_collector.collect(messages, full_response)
             return full_response
 
         except TokenLimitExceeded:
@@ -774,8 +781,10 @@ class LLM:
                 response.usage.prompt_tokens, response.usage.completion_tokens
             )
 
-            #TODO save input, output tokens to the database
-            return response.choices[0].message
+            # collect input, output tokens to the database
+            output_tokens = response.choices[0].message
+            global_collector.collect(messages, output_tokens)
+            return output_tokens
 
         except LlmCriticalError as lce:
             raise lce
