@@ -1,9 +1,10 @@
 from datetime import datetime
 from uuid import uuid4
-import orjson
+import json
 
 # custom imports
 from app.bedrock import OpenAIResponse
+from openai.types.chat import ChatCompletionMessage
 
 
 class Collector:
@@ -13,23 +14,36 @@ class Collector:
         self.data = []
 
 
-    def collect(self, messages: list, output: str):
+    def collect(self, messages: list[ChatCompletionMessage], output: str | OpenAIResponse | ChatCompletionMessage):
         """
         Collect a new data entry with messages and output.
         
         Args:
             messages (list): List of message dicts or OpenAIResponse objects.
-            output (str): The output response string.
+            output (str | OpenAIResponse | ChatCompletionMessage): The output response string or OpenAIResponse object or ChatCompletionMessage object.
         """
         now = datetime.now()
         message_list = [
-            m.model_dump() if isinstance(m, OpenAIResponse) else m for m in messages
+            {
+                "role": msg["role"],
+                "content": msg["content"]
+            } for msg in messages
         ]
+
+        if isinstance(output, OpenAIResponse):
+            output_str = output.model_dump()
+        elif isinstance(output, str):
+            output_str = output
+        elif isinstance(output, ChatCompletionMessage):
+            output_str = output.content
+        else:
+            output_str = str(output)
+
         item = {
             "id": str(uuid4()),
             "timestamp": now.isoformat(),
             "messages": message_list,
-            "output": output
+            "output": output_str
         }
         self.data.append(item)
 
@@ -45,7 +59,8 @@ class Collector:
         filename = f"collection_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jsonl"
         with open(filename, 'w') as f:
             for entry in self.data:
-                f.write(orjson.dumps(entry) + '\n')
+                print(entry)
+                f.write(json.dumps(entry) + '\n')
         print(f"Data dumped to {filename}")
         if reset:
             self.data = []
