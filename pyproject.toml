@@ -100,7 +100,7 @@ dependencies = [
     "pandas==2.2.3",
     "pillow==11.1.0",
     "playwright==1.51.0",
-    "portalocker==3.1.1",
+    "portalocker==3.2.0",
     "posthog==3.21.0",
     "primp==0.14.0",
     "propcache==0.3.1",
