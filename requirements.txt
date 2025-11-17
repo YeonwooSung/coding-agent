@@ -6,7 +6,7 @@ aiohappyeyeballs==2.6.1
     # via
     #   aiohttp
     #   coding-agent
-aiohttp==3.12.14
+aiohttp==3.13.2
     # via
     #   coding-agent
     #   crawl4ai
