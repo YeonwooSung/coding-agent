@@ -106,7 +106,7 @@ browsergym-experiments==0.13.3
     # via
     #   browsergym
     #   coding-agent
-browsergym-miniwob==0.13.3
+browsergym-miniwob==0.14.2
     # via
     #   browsergym
     #   coding-agent
