@@ -901,7 +901,7 @@ weblinx==0.3.2
     # via
     #   coding-agent
     #   weblinx-browsergym
-weblinx-browsergym==0.0.1.dev14
+weblinx-browsergym==0.0.3
     # via
     #   browsergym
     #   coding-agent
