@@ -536,7 +536,7 @@ orjson==3.10.16 ; platform_python_implementation != 'PyPy'
     # via
     #   coding-agent
     #   langsmith
-packaging==24.2
+packaging==25.0
     # via
     #   coding-agent
     #   datasets
