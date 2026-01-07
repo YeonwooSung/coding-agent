@@ -6,7 +6,7 @@ aiohappyeyeballs==2.6.1
     # via
     #   aiohttp
     #   coding-agent
-aiohttp==3.13.2
+aiohttp==3.13.3
     # via
     #   coding-agent
     #   crawl4ai
@@ -361,7 +361,7 @@ langchain-anthropic==0.3.3
     # via
     #   browser-use
     #   coding-agent
-langchain-core==0.3.80
+langchain-core==0.3.81
     # via
     #   browser-use
     #   coding-agent
@@ -419,7 +419,7 @@ markupsafe==3.0.2
     #   flask
     #   jinja2
     #   werkzeug
-marshmallow==3.26.1
+marshmallow==3.26.2
     # via
     #   coding-agent
     #   dataclasses-json
