@@ -886,7 +886,7 @@ tzdata==2025.2
     #   coding-agent
     #   faker
     #   pandas
-urllib3==2.6.0
+urllib3==2.6.3
     # via
     #   botocore
     #   coding-agent
