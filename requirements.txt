@@ -419,7 +419,7 @@ markupsafe==3.0.2
     #   flask
     #   jinja2
     #   werkzeug
-marshmallow==3.26.2
+marshmallow==4.2.0
     # via
     #   coding-agent
     #   dataclasses-json
