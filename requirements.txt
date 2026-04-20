@@ -431,7 +431,7 @@ monotonic==1.6
     # via
     #   coding-agent
     #   posthog
-mpmath==1.3.0
+mpmath==1.4.1
     # via
     #   coding-agent
     #   sympy
