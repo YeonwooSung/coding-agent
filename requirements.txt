@@ -313,7 +313,7 @@ idna==3.10
     #   httpx
     #   requests
     #   yarl
-imageio==2.37.0
+imageio==2.37.3
     # via
     #   coding-agent
     #   scikit-image
