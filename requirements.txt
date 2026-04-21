@@ -170,7 +170,7 @@ colorama==0.4.6
     #   tqdm
 crawl4ai==0.7.3
     # via coding-agent
-cryptography==45.0.6
+cryptography==46.0.7
     # via pyopenssl
 dataclasses-json==0.6.7
     # via
@@ -394,7 +394,7 @@ libwebarena==0.0.4
     # via
     #   browsergym-webarena
     #   coding-agent
-litellm==1.75.3
+litellm==1.83.0
     # via crawl4ai
 loguru==0.7.3
     # via coding-agent
@@ -635,7 +635,7 @@ pyee==12.1.1
     #   playwright
 pygments==2.19.2
     # via rich
-pyopenssl==25.1.0
+pyopenssl==26.0.0
     # via crawl4ai
 pyparsing==3.2.3
     # via
@@ -654,7 +654,7 @@ python-dotenv==1.1.0
     #   crawl4ai
     #   litellm
     #   pydantic-settings
-python-multipart==0.0.22
+python-multipart==0.0.26
     # via mcp
 pytz==2025.2
     # via
